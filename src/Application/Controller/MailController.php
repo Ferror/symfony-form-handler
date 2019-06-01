@@ -36,6 +36,9 @@ final class MailController extends SymfonyController
             ]);
         }
 
+        dump($request->getHost());
+        dump($request->getHttpHost());
+
         if (!$this->isOnWhitelist($request->getHost())) {
             throw new HostNotWhitelisted();
         }
