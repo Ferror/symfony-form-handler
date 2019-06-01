@@ -11,15 +11,7 @@ use Symfony\Controller\SymfonyController;
 final class MailController extends SymfonyController
 {
     /**
-     * @Route("/")
-     */
-    public function index() : JsonResponse
-    {
-        return new JsonResponse([], 204);
-    }
-
-    /**
-     * @Route("/{uuid}", methods={"POST"})
+     * @Route("/{uuid}", methods={"POST", "GET"})
      */
     public function mail(Request $request, string $uuid) : JsonResponse
     {
