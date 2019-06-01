@@ -1,4 +1,10 @@
 {
+    "doctrine/lexer": {
+        "version": "v1.0.1"
+    },
+    "egulias/email-validator": {
+        "version": "2.1.8"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -7,6 +13,9 @@
     },
     "psr/log": {
         "version": "1.1.0"
+    },
+    "swiftmailer/swiftmailer": {
+        "version": "v6.2.1"
     },
     "symfony/cache": {
         "version": "v4.3.0"
@@ -121,10 +130,44 @@
     "symfony/service-contracts": {
         "version": "v1.1.2"
     },
+    "symfony/swiftmailer-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "3db029c03e452b4a23f7fc45cec7c922c2247eb8"
+        },
+        "files": [
+            "config/packages/dev/swiftmailer.yaml",
+            "config/packages/swiftmailer.yaml",
+            "config/packages/test/swiftmailer.yaml"
+        ]
+    },
+    "symfony/twig-bridge": {
+        "version": "v4.3.0"
+    },
+    "symfony/twig-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "369b5b29dc52b2c190002825ae7ec24ab6f962dd"
+        },
+        "files": [
+            "config/packages/twig.yaml",
+            "config/routes/dev/twig.yaml",
+            "templates/base.html.twig"
+        ]
+    },
     "symfony/var-exporter": {
         "version": "v4.3.0"
     },
     "symfony/yaml": {
         "version": "v4.3.0"
+    },
+    "twig/twig": {
+        "version": "v2.11.0"
     }
 }

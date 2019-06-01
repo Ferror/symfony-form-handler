@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Symfony;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -17,17 +17,12 @@ class Kernel extends BaseKernel
 
     public function registerBundles(): iterable
     {
-        $contents = require $this->getProjectDir().'/config/bundles.php';
+        $contents = require $this->getProjectDir() . '/config/bundles.php';
         foreach ($contents as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
                 yield new $class();
             }
         }
-    }
-
-    public function getProjectDir(): string
-    {
-        return \dirname(__DIR__);
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
