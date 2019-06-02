@@ -21,47 +21,26 @@ final class MailController extends SymfonyController
         return new JsonResponse(['OK']);
     }
 
-
     /**
      * @Route("/{uuid}", methods={"POST"})
      */
     public function mail(Request $request, string $uuid) : Response
     {
-        //request posiada hosta, uuid z urla i form values
-
-        if ($request->getHost() === 'https://malcherczyk.com/') {
-            return new JsonResponse([
-                'data' => $request->request->all(),
-                'host' => true,
-            ]);
+        if (!$this->isOnWhitelist($request->headers->get('referer'))) {
+            throw new HostNotWhitelisted('Provided site cannot be handled');
         }
 
-
-//        dump($_SERVER['HTTP_X_FORWARDED_FOR']);
-        dump($_SERVER['REMOTE_ADDR']);
-        dump($_SERVER['REMOTE_HOST']);
-        dump($request->headers->get('HTTP_X_FORWARDED_FOR'));
-//        dump($request->getHost());
-//        dump($request->getHttpHost());
-//        dump($request->headers->get('referer'));
-//        dump($request->headers);
-//        var_dump($request->getClientIp());
-
-        if (!$this->isOnWhitelist($request->getHost())) {
-            throw new HostNotWhitelisted();
+        if ($request->get('_gotcha')) {
+            throw new HoneyPotFoundException();
         }
+
+        //"HTTP_ORIGIN" => "https://malcherczyk.com";
+        //"HTTP_REFERER" => "https://malcherczyk.com/";
 
         $fileName = 'form' . random_int(0, 100) . '.json';
-        $file = fopen($this->getParameter('kernel.project_dir') . '/data/content/' . $fileName , 'w');
+        $file = fopen($this->getParameter('kernel.project_dir') . '/data/content/' . $fileName , 'wb');
         fwrite($file, json_encode($request->request->all()));
         fclose($file);
-
-//        $message = (new \Swift_Message())
-//            ->setSubject('Hello Email')
-//            ->setFrom('send@example.com')
-//            ->setTo('recipient@example.com')
-//            ->setBody($this->renderView('email.html.twig'), 'text/html');
-//        $this->getSwiftMailer()->send($message);
 
         if ($request->get('_next')) {
             return new RedirectResponse(
@@ -70,10 +49,17 @@ final class MailController extends SymfonyController
             );
         }
 
-        return new JsonResponse([
-            'data' => $request->request->all(),
-            'host' => $request->getHost(),
-        ]);
+        return new JsonResponse(
+            [
+                'data' => $request->request->all(),
+                'host' => $request->getHost(),
+            ],
+            200,
+            [
+                'Access-Control-Allow-Headers' => 'Origin',
+                'Access-Control-Allow-Origin' => '*',
+            ]
+        );
     }
 
     private function isOnWhitelist(string $host) : bool
