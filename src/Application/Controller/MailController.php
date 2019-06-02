@@ -37,7 +37,7 @@ final class MailController extends SymfonyController
         }
 
 
-        dump($_SERVER['HTTP_X_FORWARDED_FOR']);
+//        dump($_SERVER['HTTP_X_FORWARDED_FOR']);
         dump($_SERVER['REMOTE_ADDR']);
         dump($_SERVER['REMOTE_HOST']);
         dump($request->headers->get('HTTP_X_FORWARDED_FOR'));
