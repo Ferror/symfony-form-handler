@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
+use Application\Exception\HoneyPotFoundException;
 use Application\Exception\HostNotWhitelisted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,6 +24,14 @@ final class MailController extends SymfonyController
 
     /**
      * @Route("/{uuid}", methods={"POST"})
+     *
+     * @param Request $request
+     * @param string $uuid
+     *
+     * @throws HoneyPotFoundException
+     * @throws HostNotWhitelisted
+     *
+     * @return Response
      */
     public function mail(Request $request, string $uuid) : Response
     {
