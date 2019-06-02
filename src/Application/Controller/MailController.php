@@ -36,6 +36,8 @@ final class MailController extends SymfonyController
             ]);
         }
 
+
+        dump($_SERVER['HTTP_REFERRER']);
 //        dump($request->getHost());
 //        dump($request->getHttpHost());
 //        dump($request->headers->get('referer'));
