@@ -8,3 +8,8 @@ services:
     Application\Controller\:
         resource: '../src/Application/Controller'
         tags: ['controller.service_arguments']
+
+    Application\Handler\:
+        resource: '../src/Application/Handler'
+        tags:
+            - { name: tactician.handler, typehints: true }

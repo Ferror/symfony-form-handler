@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
-use Application\Exception\HoneyPotFoundException;
-use Application\Exception\HostNotWhitelisted;
+use Application\Command\SavePostDataToJsonCommand;
+use Domain\Address\Referer;
+use Domain\Host;
+use Infrastructure\HostFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,59 +21,49 @@ final class MailController extends SymfonyController
      */
     public function index() : Response
     {
-        return new JsonResponse(['OK']);
+        return new Response('Created by Zbigniew @Ferror Malcherczyk');
+    }
+
+    /**
+     * @Route("/", methods={"POST"})
+     */
+    public function saveToJson(Request $request)
+    {
+        $host = HostFactory::fromRequest($request);
+
+        if (!$host->isSecure()) {
+            throw new \Exception('Url must be SSL');
+        }
+
+        if ($this->isOnWhitelist($host)) {
+            $this->handle(new SavePostDataToJsonCommand($host, $request->request->all()));
+
+            if ($request->get('_next')) {
+                return new RedirectResponse(
+                    $request->get('_next'),
+                    302
+                );
+            }
+        }
+
+        return new JsonResponse([], 204);
     }
 
     /**
      * @Route("/{uuid}", methods={"POST"})
-     *
-     * @param Request $request
-     * @param string $uuid
-     *
-     * @throws HoneyPotFoundException
-     * @throws HostNotWhitelisted
-     *
-     * @return Response
      */
-    public function mail(Request $request, string $uuid) : Response
+    public function saveToMail(Request $request, string $uuid) : Response
     {
-        if (!$this->isOnWhitelist($request->headers->get('referer'))) {
-            throw new HostNotWhitelisted('Provided site cannot be handled');
-        }
-
-        if ($request->get('_gotcha')) {
-            throw new HoneyPotFoundException();
-        }
-
-        //"HTTP_ORIGIN" => "https://malcherczyk.com";
-        //"HTTP_REFERER" => "https://malcherczyk.com/";
-
-        $fileName = 'form' . random_int(0, 100) . '.json';
-        $file = fopen($this->getParameter('kernel.project_dir') . '/data/content/' . $fileName , 'wb');
-        fwrite($file, json_encode($request->request->all()));
-        fclose($file);
-
-        if ($request->get('_next')) {
-            return new RedirectResponse(
-                $request->get('_next'),
-                302
-            );
-        }
-
         return new JsonResponse(
             [
                 'data' => $request->request->all(),
                 'host' => $request->getHost(),
             ],
-            200,
-            [
-                'Access-Control-Allow-Headers' => 'Origin',
-                'Access-Control-Allow-Origin' => '*',
-            ]
+            200
         );
     }
 
-    private function isOnWhitelist(string $host) : bool
+    private function isOnWhitelist(Host $host) : bool
     {
         $file = file_get_contents($this->getParameter('kernel.project_dir') . '/data/whitelist.json');
 
