@@ -31,4 +31,9 @@ final class Host
     {
         return new Url(sprintf('%s://%s', $this->schema, $this->name));
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

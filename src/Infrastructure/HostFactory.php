@@ -23,10 +23,6 @@ final class HostFactory
         $schema = parse_url($domain, PHP_URL_SCHEME);
         $host = parse_url($domain, PHP_URL_HOST);
 
-        var_dump($schema);
-        var_dump($host);
-        die;
-
         return new Host($schema, $host);
     }
 }
