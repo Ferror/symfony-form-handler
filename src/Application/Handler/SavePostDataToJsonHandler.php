@@ -12,7 +12,7 @@ final class SavePostDataToJsonHandler
         $name = sprintf('%s_%s.json', $command->getHostName(), $command->getDate()->format('Y_m_d_H_i_s'));
 
         //$this->getParameter('kernel.project_dir') jako parametr
-        $file = fopen($this->getParameter('kernel.project_dir') . '/data/content/' . $name , 'wb');
+        $file = fopen($command->getJsonOutputDir() . $name , 'wb');
         fwrite($file, json_encode($command->getData()));
         fclose($file);
     }

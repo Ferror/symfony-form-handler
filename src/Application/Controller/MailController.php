@@ -36,7 +36,11 @@ final class MailController extends SymfonyController
         }
 
         if ($this->isOnWhitelist($host)) {
-            $this->handle(new SavePostDataToJsonCommand($host, $request->request->all()));
+            $this->handle(new SavePostDataToJsonCommand(
+                $host,
+                $request->request->all(),
+                $this->getParameter('kernel.project_dir') . '/data/content/'
+            ));
 
             if ($request->get('_next')) {
                 return new RedirectResponse(
