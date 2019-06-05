@@ -44,9 +44,11 @@ final class MailController extends SymfonyController
                     302
                 );
             }
+
+            return new JsonResponse([], 204);
         }
 
-        return new JsonResponse([], 204);
+        return new JsonResponse(['error' => 'Not on whitelist'], 400);
     }
 
     /**
@@ -67,6 +69,6 @@ final class MailController extends SymfonyController
     {
         $file = file_get_contents($this->getParameter('kernel.project_dir') . '/data/whitelist.json');
 
-        return in_array($host, json_decode($file, true), true);
+        return in_array((string) $host, json_decode($file, true), true);
     }
 }
