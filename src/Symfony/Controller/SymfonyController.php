@@ -7,7 +7,7 @@ use Application\Command;
 use League\Tactician\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class SymfonyController extends AbstractController
+abstract class SymfonyController extends AbstractController
 {
     private $mailer;
     private $commandBus;
@@ -25,6 +25,6 @@ class SymfonyController extends AbstractController
 
     public function handle(Command $command) : void
     {
-        return $this->commandBus->handle($command);
+        $this->commandBus->handle($command);
     }
 }
