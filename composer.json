@@ -67,7 +67,7 @@
             "@auto-scripts"
         ],
         "phpunit": "./vendor/bin/simple-phpunit test --colors=always",
-        "phpstan": "vendor/bin/phpstan analyse src -n -l 0",
+        "phpstan": "vendor/bin/phpstan analyse src -n -l 5",
         "phpcs": "vendor/bin/phpcs src -sp --standard=phpcs.xml"
     },
     "conflict": {
