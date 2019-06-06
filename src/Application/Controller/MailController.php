@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Application\Command\SavePostDataToJsonCommand;
-use Domain\Address\Referer;
 use Domain\Host;
 use Infrastructure\HostFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;

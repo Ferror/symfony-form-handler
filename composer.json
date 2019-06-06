@@ -66,7 +66,9 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "phpunit": "./vendor/bin/simple-phpunit test --colors=always"
+        "phpunit": "./vendor/bin/simple-phpunit test --colors=always",
+        "phpstan": "vendor/bin/phpstan analyse src -n -l 0",
+        "phpcs": "vendor/bin/phpcs src -sp --standard=phpcs.xml"
     },
     "conflict": {
         "symfony/symfony": "*"
