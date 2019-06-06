@@ -13,4 +13,14 @@
             <property name="allowedShortNames" type="array" value="i,id,to,up,e,em"/>
         </properties>
     </rule>
+
+    <rule ref="ObjectCalisthenics.Files.FunctionLength">
+        <properties>
+            <property name="maxLength" value="25"/>
+        </properties>
+    </rule>
+
+    <rule ref="ObjectCalisthenics.CodeAnalysis.OneObjectOperatorPerLine">
+        <exclude-pattern>src</exclude-pattern>
+    </rule>
 </ruleset>
