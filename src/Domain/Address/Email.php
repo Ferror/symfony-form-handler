@@ -3,12 +3,20 @@ declare(strict_types=1);
 
 namespace Domain\Address;
 
-use Application\Exception\InvalidEmailException;
+use Application\Exception\Invalid\InvalidEmailException;
 
 final class Email
 {
+    /**
+     * @var string
+     */
     private $email;
 
+    /**
+     * @param string $email
+     *
+     * @throws InvalidEmailException
+     */
     public function __construct(string $email)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

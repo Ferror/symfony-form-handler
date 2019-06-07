@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Application\Command\SavePostDataToJsonCommand;
+use Application\Exception\HoneyPotFoundException;
+use Application\Exception\Invalid\InvalidDateException;
+use Application\Exception\Invalid\InvalidHostSchemaException;
+use Application\Exception\NotFound\RequestHeaderNotFoundException;
 use Domain\Host;
 use Infrastructure\HostFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +21,8 @@ final class MailController extends SymfonyController
 {
     /**
      * @Route("/", methods={"GET"})
+     *
+     * @return Response
      */
     public function index() : Response
     {
@@ -25,13 +31,26 @@ final class MailController extends SymfonyController
 
     /**
      * @Route("/", methods={"POST"})
+     *
+     * @param Request $request
+     *
+     * @throws HoneyPotFoundException
+     * @throws InvalidHostSchemaException
+     * @throws InvalidDateException
+     * @throws RequestHeaderNotFoundException
+     *
+     * @return Response
      */
-    public function saveToJson(Request $request)
+    public function saveToJson(Request $request) : Response
     {
         $host = HostFactory::fromRequest($request);
 
         if (!$host->isSecure()) {
-            throw new \Exception('Url must be SSL');
+            throw new InvalidHostSchemaException('Host schema must me https');
+        }
+
+        if ($request->get('_gotcha')) {
+            throw new HoneyPotFoundException();
         }
 
         if ($this->isOnWhitelist($host)) {
@@ -56,6 +75,11 @@ final class MailController extends SymfonyController
 
     /**
      * @Route("/{uuid}", methods={"POST"})
+     *
+     * @param Request $request
+     * @param string $uuid
+     *
+     * @return Response
      */
     public function saveToMail(Request $request, string $uuid) : Response
     {
@@ -63,6 +87,7 @@ final class MailController extends SymfonyController
             [
                 'data' => $request->request->all(),
                 'host' => $request->getHost(),
+                'id' => $uuid,
             ],
             200
         );
