@@ -3,11 +3,19 @@ declare(strict_types=1);
 
 namespace Infrastructure;
 
+use Application\Exception\NotFound\RequestHeaderNotFoundException;
 use Domain\Host;
 use Symfony\Component\HttpFoundation\Request;
 
 final class HostFactory
 {
+    /**
+     * @param Request $request
+     *
+     * @throws RequestHeaderNotFoundException
+     *
+     * @return Host
+     */
     public static function fromRequest(Request $request) : Host
     {
         $domain = $request->headers->get('referer');
@@ -17,7 +25,7 @@ final class HostFactory
         }
 
         if ($domain === null) {
-            throw new \Exception("headers not found");
+            throw new RequestHeaderNotFoundException('Origin nor Referer');
         }
 
         $schema = parse_url($domain, PHP_URL_SCHEME);

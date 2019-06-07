@@ -16,7 +16,7 @@
 
     <rule ref="ObjectCalisthenics.Files.FunctionLength">
         <properties>
-            <property name="maxLength" value="25"/>
+            <property name="maxLength" value="30"/>
         </properties>
     </rule>
 

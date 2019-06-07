@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Domain;
 
+use Application\Exception\Invalid\InvalidJsonFileException;
+use Application\Exception\NotFound\FileNotFoundException;
+
 final class File
 {
     /**
@@ -10,24 +13,57 @@ final class File
      */
     private $content;
 
+    /**
+     * @var string
+     */
+    private $path;
+
+    /**
+     * @param string $path
+     *
+     * @throws FileNotFoundException
+     */
     public function __construct(string $path)
     {
         $content = file_get_contents($path);
 
         if ($content === false) {
-            throw new \Exception('File not found exception');
+            throw new FileNotFoundException('File not found exception');
         }
 
         $this->content = $content;
+        $this->path = $path;
     }
 
-    public function getContent()
+    /**
+     * @return string
+     */
+    public function getContent() : string
     {
         return $this->content;
     }
 
-    public function toArray()
+    /**
+     * @return string
+     */
+    public function getPath() : string
     {
-        return json_decode($this->content, true);
+        return $this->path;
+    }
+
+    /**
+     * @throws InvalidJsonFileException
+     *
+     * @return array
+     */
+    public function toArray() : array
+    {
+        $decoded = json_decode($this->content, true);
+
+        if ($decoded === null) {
+            throw new InvalidJsonFileException($this->path);
+        }
+
+        return $decoded;
     }
 }

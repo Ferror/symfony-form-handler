@@ -5,8 +5,11 @@ namespace Application\Exception\NotFound;
 
 final class RequestHeaderNotFoundException extends \Exception
 {
-    public function __construct($header)
+    /**
+     * @param string $header
+     */
+    public function __construct(string $header)
     {
-        parent::__construct("Header $header not found in request", 404);
+        parent::__construct("Header $header not found in request", 400);
     }
 }

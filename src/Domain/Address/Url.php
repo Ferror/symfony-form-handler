@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Domain\Address;
 
+use Application\Exception\Invalid\InvalidUrlException;
+
 final class Url
 {
     /**
@@ -10,10 +12,15 @@ final class Url
      */
     private $url;
 
+    /**
+     * @param string $url
+     *
+     * @throws InvalidUrlException
+     */
     public function __construct(string $url)
     {
         if (filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \Exception('Invalid url');
+            throw new InvalidUrlException($url);
         }
 
         $this->url = $url;
