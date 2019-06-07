@@ -21,6 +21,8 @@ final class MailController extends SymfonyController
 {
     /**
      * @Route("/", methods={"GET"})
+     *
+     * @return Response
      */
     public function index() : Response
     {
@@ -73,6 +75,11 @@ final class MailController extends SymfonyController
 
     /**
      * @Route("/{uuid}", methods={"POST"})
+     *
+     * @param Request $request
+     * @param string $uuid
+     *
+     * @return Response
      */
     public function saveToMail(Request $request, string $uuid) : Response
     {
@@ -80,6 +87,7 @@ final class MailController extends SymfonyController
             [
                 'data' => $request->request->all(),
                 'host' => $request->getHost(),
+                'id' => $uuid,
             ],
             200
         );
