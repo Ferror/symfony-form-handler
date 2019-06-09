@@ -87,11 +87,12 @@ final class MailController extends SymfonyController
         $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
         $email->addContent("text/html", "<strong>and easy to do anywhere, even with PHP</strong>");
 
-        $this->getSendGridMailer()->send($email);
+        $response = $this->getSendGridMailer()->send($email);
 
         return new JsonResponse(
             [
                 'data' => $request->request->all(),
+                'mail_response' => $response->statusCode(),
                 'host' => $request->getHost(),
                 'id' => $uuid,
             ],
