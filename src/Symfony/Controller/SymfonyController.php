@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Symfony\Controller;
 
 use Application\Command;
+use Infrastructure\SendGrid\SendGridMailer;
 use League\Tactician\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -11,11 +12,13 @@ abstract class SymfonyController extends AbstractController
 {
     private $mailer;
     private $commandBus;
+    private $sendGridMailer;
 
-    public function __construct(\Swift_Mailer $mailer, CommandBus $commandBus)
+    public function __construct(\Swift_Mailer $mailer, CommandBus $commandBus, SendGridMailer $sendGridMailer)
     {
         $this->mailer = $mailer;
         $this->commandBus = $commandBus;
+        $this->sendGridMailer = $sendGridMailer;
     }
 
     public function getSwiftMailer() : \Swift_Mailer
@@ -23,9 +26,9 @@ abstract class SymfonyController extends AbstractController
         return $this->mailer;
     }
 
-    public function getSendGridMailer() : \SendGrid
+    public function getSendGridMailer() : SendGridMailer
     {
-        return new \SendGrid($this->getParameter('sendgrid_apikey'));
+        return $this->sendGridMailer;
     }
 
     public function handle(Command $command) : void

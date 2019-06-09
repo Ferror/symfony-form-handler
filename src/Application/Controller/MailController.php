@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Application\Command\SavePostDataToJsonCommand;
+use Application\Command\SendConversionToMailCommand;
 use Application\Exception\HoneyPotFoundException;
 use Application\Exception\Invalid\InvalidDateException;
 use Application\Exception\Invalid\InvalidHostSchemaException;
@@ -46,7 +47,7 @@ final class MailController extends SymfonyController
         $host = HostFactory::fromRequest($request);
 
         if (!$host->isSecure()) {
-            throw new InvalidHostSchemaException('Host schema must me https');
+            throw new InvalidHostSchemaException('Host schema must be https');
         }
 
         if ($request->get('_gotcha')) {
@@ -54,11 +55,13 @@ final class MailController extends SymfonyController
         }
 
         if ($this->isOnWhitelist($host)) {
-            $this->handle(new SavePostDataToJsonCommand(
-                $host,
-                $request->request->all(),
-                $this->getParameter('kernel.project_dir') . '/data/content/'
-            ));
+            $this->handle(
+                new SavePostDataToJsonCommand(
+                    $host,
+                    $request->request->all(),
+                    $this->getParameter('kernel.project_dir') . '/data/content/'
+                )
+            );
 
             if ($request->get('_next')) {
                 return new RedirectResponse(
@@ -76,27 +79,42 @@ final class MailController extends SymfonyController
     /**
      * @Route("/{uuid}", methods={"POST"})
      *
+     * @param Request $request
+     * @param string $uuid
+     *
+     * @throws HoneyPotFoundException
+     * @throws InvalidHostSchemaException
+     * @throws RequestHeaderNotFoundException
+     *
+     * @return Response
      */
     public function saveToMail(Request $request, string $uuid) : Response
     {
+        $host = HostFactory::fromRequest($request);
 
-        $email = new \SendGrid\Mail\Mail();
-        $email->setFrom('test@example.com');
-        $email->setSubject('Sending with SendGrid is Fun');
-        $email->addTo($this->getParameter('sendgrid_email_address'));
-        $email->addContent('text/html', '<strong>and easy to do anywhere, even with PHP</strong>');
-        $response = $this->getSendGridMailer()->send($email);
+        if (!$host->isSecure()) {
+            throw new InvalidHostSchemaException('Host schema must be https');
+        }
 
-        return new JsonResponse(
-            [
-                'data' => $request->request->all(),
-                'mail_response' => $response->statusCode(),
-                'host' => $request->getHost(),
-                'env' => getenv('SENDER_EMAIL_ADDRESS'),
-                'id' => $uuid,
-            ],
-            200
-        );
+        if ($request->get('_gotcha')) {
+            throw new HoneyPotFoundException();
+        }
+
+        if ($this->isOnWhitelist($host)) {
+            $this->handle(
+                new SendConversionToMailCommand(
+                    $host,
+                    $request->request->all(),
+                    $this->getParameter('sendgrid.email_address')
+                )
+            );
+
+            return new JsonResponse([], 204);
+        }
+
+        return new JsonResponse(['error' => 'Not on whitelist'], 400);
+
+
     }
 
     private function isOnWhitelist(Host $host) : bool

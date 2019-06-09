@@ -1,6 +1,6 @@
 parameters:
-    sendgrid_email_address: '%env(SENDGRID_EMAIL_ADDRESS)%'
-    sendgrid_apikey: '%env(SENDGRID_API_KEY)%'
+    sendgrid.email_address: '%env(SENDGRID_EMAIL_ADDRESS)%'
+    sendgrid.apikey: '%env(SENDGRID_API_KEY)%'
 
 services:
     _defaults:
@@ -15,3 +15,6 @@ services:
         resource: '../src/Application/Handler'
         tags:
             - { name: tactician.handler, typehints: true }
+
+    Infrastructure\SendGrid\SendGridMailer:
+        arguments: ['%sendgrid.apikey%']
