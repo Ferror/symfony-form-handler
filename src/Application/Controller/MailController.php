@@ -76,16 +76,21 @@ final class MailController extends SymfonyController
     /**
      * @Route("/{uuid}", methods={"POST"})
      *
-     * @param Request $request
-     * @param string $uuid
-     *
-     * @return Response
      */
     public function saveToMail(Request $request, string $uuid) : Response
     {
+
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom('test@example.com');
+        $email->setSubject('Sending with SendGrid is Fun');
+        $email->addTo(getenv('SENDER_EMAIL_ADDRESS'));
+        $email->addContent('text/html', '<strong>and easy to do anywhere, even with PHP</strong>');
+        $response = $this->getSendGridMailer()->send($email);
+
         return new JsonResponse(
             [
                 'data' => $request->request->all(),
+                'mail_response' => $response->statusCode(),
                 'host' => $request->getHost(),
                 'id' => $uuid,
             ],

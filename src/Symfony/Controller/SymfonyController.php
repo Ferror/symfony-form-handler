@@ -23,6 +23,11 @@ abstract class SymfonyController extends AbstractController
         return $this->mailer;
     }
 
+    public function getSendGridMailer() : \SendGrid
+    {
+        return new \SendGrid(getenv('SENDGRID_API_KEY'));
+    }
+
     public function handle(Command $command) : void
     {
         $this->commandBus->handle($command);
