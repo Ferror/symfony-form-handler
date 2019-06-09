@@ -1,4 +1,6 @@
 parameters:
+    sendgrid_email_address: '%env(SENDGRID_EMAIL_ADDRESS)%'
+    sendgrid_apikey: '%env(SENDGRID_API_KEY)%'
 
 services:
     _defaults:

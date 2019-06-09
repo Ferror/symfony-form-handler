@@ -83,7 +83,7 @@ final class MailController extends SymfonyController
         $email = new \SendGrid\Mail\Mail();
         $email->setFrom('test@example.com');
         $email->setSubject('Sending with SendGrid is Fun');
-        $email->addTo('test@test.pl');
+        $email->addTo($this->getParameter('sendgrid_email_address'));
         $email->addContent('text/html', '<strong>and easy to do anywhere, even with PHP</strong>');
         $response = $this->getSendGridMailer()->send($email);
 
