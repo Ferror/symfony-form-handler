@@ -92,7 +92,7 @@ final class MailController extends SymfonyController
         return new JsonResponse(
             [
                 'data' => $request->request->all(),
-                'mail_response' => $response->statusCode(),
+                'mail_response' => var_dump($response),
                 'host' => $request->getHost(),
                 'id' => $uuid,
             ],
