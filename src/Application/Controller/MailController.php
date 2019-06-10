@@ -105,7 +105,8 @@ final class MailController extends SymfonyController
                 new SendConversionToMailCommand(
                     $host,
                     $request->request->all(),
-                    $this->getParameter('sendgrid.email_address')
+                    $this->getParameter('sendgrid.email_address'),
+                    $this->renderView('email.html.twig')
                 )
             );
 

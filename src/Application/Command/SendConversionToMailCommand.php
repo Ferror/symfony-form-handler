@@ -29,15 +29,22 @@ final class SendConversionToMailCommand implements Command
     private $receiver;
 
     /**
+     * @var string
+     */
+    private $template;
+
+    /**
      * @param Host $host
      * @param array $data
      * @param string $receiver
+     * @param string $template
      */
-    public function __construct(Host $host, array $data, string $receiver)
+    public function __construct(Host $host, array $data, string $receiver, string $template)
     {
         $this->host = $host;
         $this->data = $data;
         $this->receiver = $receiver;
+        $this->template = $template;
     }
 
     public function getMail() : Mail
@@ -47,7 +54,7 @@ final class SendConversionToMailCommand implements Command
             new To($this->receiver),
             new Subject(sprintf('Conversion from: %s', $this->host->getName())),
             null,
-            new HtmlContent('<strong>and easy to do anywhere, even with PHP</strong>')
+            new HtmlContent($this->template)
         );
     }
 }
