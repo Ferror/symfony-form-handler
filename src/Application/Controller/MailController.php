@@ -113,8 +113,16 @@ final class MailController extends SymfonyController
         }
 
         return new JsonResponse(['error' => 'Not on whitelist'], 400);
+    }
 
-
+    /**
+     * @Route("/contacts", methods={"POST"})
+     *
+     * @return Response
+     */
+    public function createSendGridContact() : Response
+    {
+        return new Response();
     }
 
     private function isOnWhitelist(Host $host) : bool

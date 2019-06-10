@@ -42,7 +42,7 @@ final class SavePostDataToJsonCommand implements Command
         try {
             $this->date = new DateTime();
         } catch (\Exception $e) {
-            throw new InvalidDateException((string) $this->date);
+            throw new InvalidDateException('');
         }
 
         $this->host = $host;
