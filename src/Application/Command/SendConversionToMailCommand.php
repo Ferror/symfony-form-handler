@@ -22,6 +22,7 @@ final class SendConversionToMailCommand implements Command
      * @var array
      */
     private $data;
+    
     /**
      * @var string
      */
