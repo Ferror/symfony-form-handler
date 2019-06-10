@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Symfony\EventSubscriber;
 
 use Application\Exception\HoneyPotFoundException;
+use Application\Exception\Invalid\InvalidHostSchemaException;
+use Application\Exception\NotFound\RequestHeaderNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,6 +33,18 @@ class RoutingEventSubscriber implements EventSubscriberInterface
             );
         }
 
+        if ($exception instanceof RequestHeaderNotFoundException) {
+            $event->setResponse(
+                new JsonResponse(['error' => $exception->getMessage()], 400)
+            );
+        }
+
+        if ($exception instanceof InvalidHostSchemaException) {
+            $event->setResponse(
+                new JsonResponse(['error' => $exception->getMessage()], 400)
+            );
+        }
+
         if ($exception instanceof RouteNotFoundException) {
             $event->setResponse(
                 new JsonResponse(['error' => 'Route not found'], 404)
@@ -42,9 +56,5 @@ class RoutingEventSubscriber implements EventSubscriberInterface
                 new RedirectResponse('https://www.wikipedia.org', 301)
             );
         }
-
-        $event->setResponse(
-            new JsonResponse(['error' => $exception->getMessage()], $exception->getCode())
-        );
     }
 }
