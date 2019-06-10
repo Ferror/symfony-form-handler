@@ -10,6 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -28,6 +29,12 @@ class RoutingEventSubscriber implements EventSubscriberInterface
         $exception = $event->getException();
 
         if ($exception instanceof MethodNotAllowedException) {
+            $event->setResponse(
+                new JsonResponse(['error' => 'Method not allowed'], 400)
+            );
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
             $event->setResponse(
                 new JsonResponse(['error' => 'Method not allowed'], 400)
             );
