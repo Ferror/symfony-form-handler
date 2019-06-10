@@ -7,6 +7,11 @@ services:
         autowire: true
         autoconfigure: true
 
+    Infrastructure\:
+        resource: '../src/Infrastructure/*'
+        exclude:
+            - '../src/Infrastructure/Symfony/{Kernel.php}'
+
     Application\Controller\:
         resource: '../src/Application/Controller'
         tags: ['controller.service_arguments']

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Symfony\EventSubscriber;
+namespace Infrastructure\Symfony\EventSubscriber;
 
 use Application\Exception\HoneyPotFoundException;
 use Application\Exception\Invalid\InvalidHostSchemaException;

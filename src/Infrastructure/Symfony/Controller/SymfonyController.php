@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Symfony\Controller;
+namespace Infrastructure\Symfony\Controller;
 
 use Application\Command;
 use Infrastructure\SendGrid\SendGridMailer;
