@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-class RoutingEventSubscriber implements EventSubscriberInterface
+final class RoutingEventSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents() : array
     {
@@ -28,18 +28,6 @@ class RoutingEventSubscriber implements EventSubscriberInterface
     {
         $exception = $event->getException();
 
-        if ($exception instanceof MethodNotAllowedException) {
-            $event->setResponse(
-                new JsonResponse(['error' => 'Method not allowed'], 400)
-            );
-        }
-
-        if ($exception instanceof MethodNotAllowedHttpException) {
-            $event->setResponse(
-                new JsonResponse(['error' => 'Method not allowed'], 400)
-            );
-        }
-
         if ($exception instanceof RequestHeaderNotFoundException) {
             $event->setResponse(
                 new JsonResponse(['error' => $exception->getMessage()], 400)
@@ -49,12 +37,6 @@ class RoutingEventSubscriber implements EventSubscriberInterface
         if ($exception instanceof InvalidHostSchemaException) {
             $event->setResponse(
                 new JsonResponse(['error' => $exception->getMessage()], 400)
-            );
-        }
-
-        if ($exception instanceof RouteNotFoundException) {
-            $event->setResponse(
-                new JsonResponse(['error' => 'Route not found'], 404)
             );
         }
 

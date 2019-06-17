@@ -64,10 +64,7 @@ final class MailController extends SymfonyController
             );
 
             if ($request->get('_next')) {
-                return new RedirectResponse(
-                    $request->get('_next'),
-                    302
-                );
+                return new RedirectResponse($request->get('_next'), 302);
             }
 
             return new JsonResponse([], 204);
